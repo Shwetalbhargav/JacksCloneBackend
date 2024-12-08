@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from app.scraper import scrape_jackjay
 from app.database import mongo
 from datetime import datetime
-from app.config import APP_START_TIME  # Import from config.py
+from app.config import APP_START_TIME  
 
 scraper_routes = Blueprint("scraper_routes", __name__)
 
@@ -49,3 +49,14 @@ def check_status():
         }), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@scraper_routes.route("/", methods=["GET"])
+def home():
+    try:
+        
+        return jsonify({"message": "Welcome to the Flask API!"}), 200
+    except Exception as e:
+     
+        return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
+
