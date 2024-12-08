@@ -19,6 +19,23 @@ def scrape_and_store():
         return jsonify({"message": "Data scraped and stored successfully!", "data": scraped_data}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@scraper_routes.route("/view_data", methods=["GET"])
+def view_data():
+    try:
+        db = mongo.db.jackjay_data
+        # Retrieve all documents from the collection
+        data = list(db.find({}))
+        
+        # Ensure the data is serializable (MongoDB ObjectId can cause issues)
+        for doc in data:
+            doc["_id"] = str(doc["_id"])  # Convert ObjectId to string
+        
+        return jsonify(data), 200
+    except Exception as e:
+        # Handle any unexpected errors and return an error message
+        return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
+
 
 @scraper_routes.route("/status", methods=["GET"])
 def check_status():

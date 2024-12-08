@@ -9,11 +9,13 @@ def create_app():
     app = Flask(__name__)
 
     # MongoDB configuration
-    app.config["MONGO_URI"] = "mongodb+srv://shwetal:12345@cluster0.kvpwk.mongodb.net/jackjay?retryWrites=true&w=majority"
+    app.config["MONGO_URI"] = "mongodb+srv://shwetal:12345@Cluster0.kvpwk.mongodb.net/jackjay?retryWrites=true&w=majority"
 
     # Initialize the database
     initialize_db(app)
+    
 
+    
 
 
 
