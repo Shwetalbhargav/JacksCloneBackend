@@ -6,11 +6,25 @@ from app.config import APP_START_TIME
 
 scraper_routes = Blueprint("scraper_routes", __name__)
 
+@scraper_routes.route("/test_db", methods=["GET"])
+def test_db():
+    try:
+        db_status = mongo.cx.admin.command("ping")
+        return jsonify({"status": "connected", "db_status": db_status}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
 @scraper_routes.route("/scrape", methods=["GET"])
 def scrape_and_store():
     try:
         # Scrape data
-        scraped_data = scrape_jackjay()
+        #scraped_data = scrape_jackjay()
+        print("Using mock data for testing...")
+        scraped_data = [
+            {"title": "Test Title 1", "description": "Test Description 1"},
+            {"title": "Test Title 2", "description": "Test Description 2"}
+        ]
 
         # Store data in MongoDB
         db = mongo.db.jackjay_data
