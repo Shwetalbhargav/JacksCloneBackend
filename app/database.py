@@ -4,8 +4,10 @@ from pymongo import MongoClient
 mongo = PyMongo()
 
 def initialize_db(app):
+    # Initialize PyMongo with Flask app
     mongo.init_app(app)
 
-client = MongoClient(app.confi["MONGO_URI"])
-db = client["jackjay_data"]  
-print(db.jackjay_data()) 
+    # Use MongoClient for manual operations (inside the function scope)
+    client = MongoClient(app.config["MONGO_URI"])
+    db = client["jackjay"]  # Replace "jackjay" with your actual database name
+    print(f"Connected to MongoDB database: {db.name}")
