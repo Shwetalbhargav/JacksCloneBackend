@@ -18,18 +18,21 @@ def test_db():
 @scraper_routes.route("/scrape", methods=["GET"])
 def scrape_and_store():
     try:
-        # Scrape data
-        #scraped_data = scrape_jackjay()
+        
+        scraped_data = scrape_jackjay()
         print("Using mock data for testing...")
         scraped_data = [
             {"title": "Test Title 1", "description": "Test Description 1"},
             {"title": "Test Title 2", "description": "Test Description 2"}
         ]
 
-        # Store data in MongoDB
         db = mongo.db.jackjay_data
-        db.insert_many(scraped_data)
-
+        result = db.insert_many(scraped_data)
+        
+        response_data = [
+            {**doc, "_id": str(inserted_id)}
+            for doc, inserted_id in zip(scraped_data, result.inserted_ids)
+        ] 
         return jsonify({"message": "Data scraped and stored successfully!", "data": scraped_data}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -38,16 +41,16 @@ def scrape_and_store():
 def view_data():
     try:
         db = mongo.db.jackjay_data
-        # Retrieve all documents from the collection
+        
         data = list(db.find({}))
         
-        # Ensure the data is serializable (MongoDB ObjectId can cause issues)
+        
         for doc in data:
-            doc["_id"] = str(doc["_id"])  # Convert ObjectId to string
+            doc["_id"] = str(doc["_id"]) 
         
         return jsonify(data), 200
     except Exception as e:
-        # Handle any unexpected errors and return an error message
+        
         return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
 
 
